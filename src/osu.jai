@@ -1,3 +1,8 @@
+Vec3i :: struct
+{
+    x, y, z: int;
+}
+
 Osu_Hit_Object_Type_Flag :: enum u32
 {
     Hit_Circle :: 0x1;

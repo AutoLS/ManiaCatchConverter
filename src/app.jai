@@ -78,6 +78,42 @@ update_timings :: (using osu_file: Osu_File, using app: *Mania_Catch_Converter)
     }
 }
 
+free_if_there_is_exisiting_memory :: (using osu_file: *Osu_File)
+{
+    if hit_objects.data && hit_objects.count > 0
+    {
+        array_free(hit_objects);
+    }
+
+    if timing_points.data && timing_points.count > 0
+    {
+        array_free(timing_points);
+    }
+
+    if metadata.Tags.data && metadata.Tags.count > 0
+    {
+        array_free(metadata.Tags);
+    }
+
+    if editor_info.Bookmarks.data && editor_info.Bookmarks.count > 0
+    {
+        array_free(editor_info.Bookmarks);
+    }
+
+    if colours.combo_colors.data && colours.combo_colors.count > 0
+    {
+        array_free(colours.combo_colors);
+    }
+
+    if metadata.Title.data then free(metadata.Title);
+    if metadata.TitleUnicode.data then free(metadata.TitleUnicode);
+    if metadata.Artist.data then free(metadata.Artist);
+    if metadata.ArtistUnicode.data then free(metadata.ArtistUnicode);
+    if metadata.Creator.data then free(metadata.Creator);
+    if metadata.Version.data then free(metadata.Version);
+    if metadata.Source.data then free(metadata.Source);
+}
+
 handle_file_action :: (using app: *Mania_Catch_Converter, input: Input)
 {
     open_file_shortcut := key_down(input, .lctrl) && key_ended_down(input, .o);
@@ -88,6 +124,7 @@ handle_file_action :: (using app: *Mania_Catch_Converter, input: Input)
 
         if opened_file_name.count > 0
         {
+            free_if_there_is_exisiting_memory(*opened_osu_file);
             opened_osu_file = read_osu_file(opened_file_name);
             app_state = .File_Opened;     
         }
@@ -154,6 +191,7 @@ mania_to_catch :: (using osu_file: *Osu_File, using app: Mania_Catch_Converter)
     previous_time := -1;
     
     converted_hit_objects: [..] Osu_Hit_Object;
+    converted_hit_objects.allocator = temp;
 
     for hit_objects
     {
