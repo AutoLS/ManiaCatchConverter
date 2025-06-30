@@ -103,6 +103,7 @@ main :: ()
                         ImGui.Checkbox("No bullshit hypers", *no_bullshit_hypers);
                         if no_bullshit_hypers
                         {
+                            ImGui.Checkbox("Allow hyper if same direction", *allow_bullshit_hyper_if_same_direction);
                             if ImGui.InputFloat("Bullshit threshold", *bullshit_threshold, 1, 10, "%.1f")
                             {
                                 Clamp(*bullshit_threshold, 50, 200.0);
@@ -117,7 +118,7 @@ main :: ()
                             }
                             if ImGui.InputFloat("Bullshit tolerance", *bullshit_tolerance, 1, 10, "%.1f")
                             {
-                                Clamp(*bullshit_tolerance, 50.0, 1000.0);
+                                Clamp(*bullshit_tolerance, 0.0, 1000.0);
                             }
                         }
                         ImGui.NewLine();
