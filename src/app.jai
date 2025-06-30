@@ -47,6 +47,7 @@ Mania_Catch_Converter :: struct
 
     no_bullshit_hypers: bool = true;
     bullshit_tolerance: float = 400.0;
+    bullshit_threshold: float = 100.0;
 }
 
 get_closest_snapping :: (ms: int, timing_info: Timing_Info) -> Snapping
@@ -297,7 +298,7 @@ mania_to_catch :: (using osu_file: *Osu_File, using app: Mania_Catch_Converter)
             last_is_hyper = true;
             
             //Remove bullshit hypers 
-            if time_to_next < 100 && no_bullshit_hypers
+            if xx time_to_next < bullshit_threshold && no_bullshit_hypers
             {
                 walk_distance := bullshit_tolerance * (time_to_next/1000.0);
                 next_object.x = current_object.x + cast(int)(this_direction * walk_distance);
