@@ -103,6 +103,18 @@ main :: ()
                         ImGui.Checkbox("No bullshit hypers", *no_bullshit_hypers);
                         if no_bullshit_hypers
                         {
+                            if ImGui.InputFloat("Bullshit threshold", *bullshit_threshold, 1, 10, "%.1f")
+                            {
+                                Clamp(*bullshit_threshold, 50, 200.0);
+                            }
+                            if ImGui.IsItemHovered() 
+                            {
+                                ImGui.BeginTooltip();
+                                ImGui.PushTextWrapPos(400);
+                                ImGui.TextUnformatted("Lower value = allow hyper dash on higher snapping (eg. 1/8), Recommend to set it above 100 for best experience.");
+                                ImGui.PopTextWrapPos();
+                                ImGui.EndTooltip();
+                            }
                             if ImGui.InputFloat("Bullshit tolerance", *bullshit_tolerance, 1, 10, "%.1f")
                             {
                                 Clamp(*bullshit_tolerance, 50.0, 1000.0);
