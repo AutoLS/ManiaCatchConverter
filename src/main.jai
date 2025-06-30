@@ -104,6 +104,7 @@ main :: ()
                         if no_bullshit_hypers
                         {
                             ImGui.Checkbox("Allow hyper if same direction", *allow_bullshit_hyper_if_same_direction);
+                            ImGui.Checkbox("No anti-flow", *no_antiflow);
                             if ImGui.InputFloat("Bullshit threshold", *bullshit_threshold, 1, 10, "%.1f")
                             {
                                 Clamp(*bullshit_threshold, 50, 200.0);
@@ -112,13 +113,21 @@ main :: ()
                             {
                                 ImGui.BeginTooltip();
                                 ImGui.PushTextWrapPos(400);
-                                ImGui.TextUnformatted("Lower value = allow hyper dash on higher snapping (eg. 1/8), Recommend to set it above 100 for best experience.");
+                                ImGui.TextUnformatted("Lower value = allow hyper dash on higher snapping (eg. 1/8), Recommend to set it above 100 for best experience");
                                 ImGui.PopTextWrapPos();
                                 ImGui.EndTooltip();
                             }
-                            if ImGui.InputFloat("Bullshit tolerance", *bullshit_tolerance, 1, 10, "%.1f")
+                            if ImGui.InputFloat("Bullshit tolerance", *bullshit_tolerance, 1, 5, "%.1f")
                             {
-                                Clamp(*bullshit_tolerance, 0.0, 1000.0);
+                                Clamp(*bullshit_tolerance, 2.0, 20.0);
+                            }
+                            if ImGui.IsItemHovered() 
+                            {
+                                ImGui.BeginTooltip();
+                                ImGui.PushTextWrapPos(400);
+                                ImGui.TextUnformatted("Lower value = higher spacing between notes");
+                                ImGui.PopTextWrapPos();
+                                ImGui.EndTooltip();
                             }
                         }
                         ImGui.NewLine();

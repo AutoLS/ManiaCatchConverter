@@ -47,7 +47,8 @@ Mania_Catch_Converter :: struct
 
     no_bullshit_hypers: bool = true;
     allow_bullshit_hyper_if_same_direction: bool = false;
-    bullshit_tolerance: float = 400.0;
+    no_antiflow: bool = true;
+    bullshit_tolerance: float = 5.0;
     bullshit_threshold: float = 100.0;
 }
 
@@ -307,8 +308,11 @@ mania_to_catch :: (using osu_file: *Osu_File, using app: Mania_Catch_Converter)
             //Remove bullshit hypers 
             if xx time_to_next < bullshit_threshold && no_bullshit_hypers && !skip_hyper
             {
-                walk_distance := bullshit_tolerance * (time_to_next/1000.0);
-                next_object.x = current_object.x + cast(int)(this_direction * walk_distance);
+                adjusted_distance := trigger_distance * (1 / bullshit_tolerance);
+                //walk_distance := bullshit_tolerance * (time_to_next/1000.0);
+                next_object.x = ifx no_antiflow 
+                                then current_object.x + cast(int)(last_direction * adjusted_distance)
+                                else current_object.x + cast(int)(this_direction * adjusted_distance);
                 Clamp(*next_object.x, 16, 496);
                 last_is_hyper = false;
             }
