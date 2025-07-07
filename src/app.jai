@@ -45,11 +45,14 @@ Mania_Catch_Converter :: struct
     output_filename_buffer: *u8;
     output_difficulty_name_buffer: *u8;
 
+    trigger_distance_coefficient: float = 0.5;
+    adjusted_distance_offset: float = 20;
+
     no_bullshit_hypers: bool = true;
     allow_bullshit_hyper_if_same_direction: bool = false;
     no_antiflow: bool = true;
     bullshit_tolerance: float = 5.0;
-    bullshit_threshold: float = 100.0;
+    removal_ms: float = 100.0;
 }
 
 get_closest_snapping :: (ms: int, timing_info: Timing_Info) -> Snapping
@@ -282,11 +285,10 @@ mania_to_catch :: (using osu_file: *Osu_File, using app: Mania_Catch_Converter)
         if distance_to_next < xx trigger_distance
         {
             //!Naive attempt to fix pixel jumps
-            difference := trigger_distance - distance_to_next;
-            if difference < trigger_distance * 0.3
+            if distance_to_next > trigger_distance * trigger_distance_coefficient
             {
-                adjusted_distance := this_direction * (difference + 10);
-                next_object.x += xx adjusted_distance;
+                adjusted_distance := this_direction * (trigger_distance + adjusted_distance_offset);
+                next_object.x = current_object.x + xx adjusted_distance;
                 Clamp(*next_object.x, 16, 496);
                 last_is_hyper = true;
             }
@@ -306,7 +308,7 @@ mania_to_catch :: (using osu_file: *Osu_File, using app: Mania_Catch_Converter)
             }
             
             //Remove bullshit hypers 
-            if xx time_to_next < bullshit_threshold && no_bullshit_hypers && !skip_hyper
+            if xx time_to_next < removal_ms && no_bullshit_hypers && !skip_hyper
             {
                 adjusted_distance := trigger_distance * (1 / bullshit_tolerance);
                 //walk_distance := bullshit_tolerance * (time_to_next/1000.0);
