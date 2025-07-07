@@ -15,8 +15,8 @@ main :: ()
 {
     app: Application;
     app.name = "ManiaToCatchConverter";
-    app.w = 400;
-    app.h = 400;
+    app.w = 500;
+    app.h = 500;
 
     init_lib(*app, false);
 
@@ -100,35 +100,34 @@ main :: ()
                         ImGui.SliderFloat("CS", *difficulty_info.CircleSize, 1, 10, "%.1f");
                         ImGui.SliderFloat("AR", *difficulty_info.ApproachRate, 1, 10, "%.1f");
                         ImGui.SliderFloat("OD", *difficulty_info.OverallDifficulty, 1, 10, "%.1f");
+                        if ImGui.InputFloat("Trigger Distance Coefficient", *trigger_distance_coefficient, 0.1, 0.1, "%.1f")
+                        {
+                            Clamp(*trigger_distance_coefficient, 0.1, 0.9);
+                        }
+                        tool_tip("The trigger distance coefficient determines how much distance to next is required to make it a hyper. For example if it's at 0.5, it will make a hyper jump if the distance to next is greater than half of trigger distance.");
+                        if ImGui.InputFloat("Hyper offset", *adjusted_distance_offset, 0.1, 0.1, "%.1f")
+                        {
+                            Clamp(*adjusted_distance_offset, 0, 100);
+                        }
+                        tool_tip("Offset of converted hyper jumps. Higher number = higher spacing");
                         ImGui.Checkbox("No bullshit hypers", *no_bullshit_hypers);
+                        tool_tip("Remove hypers based on user's parameters");
                         if no_bullshit_hypers
                         {
                             ImGui.Checkbox("Allow hyper if same direction", *allow_bullshit_hyper_if_same_direction);
+                            tool_tip("Ignore all the settings below and allow hyper if the current to next fruit's direction is the same as previous");
                             ImGui.Checkbox("No anti-flow", *no_antiflow);
-                            if ImGui.InputFloat("Bullshit threshold", *bullshit_threshold, 1, 10, "%.1f")
+                            tool_tip("Always adjust the spacing to be same as previous direction");
+                            if ImGui.InputFloat("Removal ms", *removal_ms, 1, 10, "%.1f")
                             {
-                                Clamp(*bullshit_threshold, 50, 200.0);
+                                Clamp(*removal_ms, 50, 200.0);
                             }
-                            if ImGui.IsItemHovered() 
-                            {
-                                ImGui.BeginTooltip();
-                                ImGui.PushTextWrapPos(400);
-                                ImGui.TextUnformatted("Lower value = allow hyper dash on higher snapping (eg. 1/8), Recommend to set it above 100 for best experience");
-                                ImGui.PopTextWrapPos();
-                                ImGui.EndTooltip();
-                            }
-                            if ImGui.InputFloat("Bullshit tolerance", *bullshit_tolerance, 1, 5, "%.1f")
+                            tool_tip("If the time to next of the current hyper jump is lower than this value then it will remove the current hyper");
+                            if ImGui.InputFloat("Spacing tolerance", *bullshit_tolerance, 1, 5, "%.1f")
                             {
                                 Clamp(*bullshit_tolerance, 2.0, 20.0);
                             }
-                            if ImGui.IsItemHovered() 
-                            {
-                                ImGui.BeginTooltip();
-                                ImGui.PushTextWrapPos(400);
-                                ImGui.TextUnformatted("Lower value = higher spacing between notes");
-                                ImGui.PopTextWrapPos();
-                                ImGui.EndTooltip();
-                            }
+                            tool_tip("Lower tolerance = higher spacing between adjusted notes");
                         }
                         ImGui.NewLine();
                         ImGui.Separator();
