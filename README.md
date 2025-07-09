@@ -5,7 +5,8 @@ It removes impossible pixels by calculating the trigger distance of current frui
 
 It also removes impossible hyper jumps if the time of current fruit to the next is below 100ms, this is a very simple fix that I could think of at the moment but I am sure it could be improved.
 
-![image](https://github.com/user-attachments/assets/dc28305c-7741-42c4-88d1-bca7d25a161b)
+![ManiaCatchConverter_PY0nHsVBvF](https://github.com/user-attachments/assets/a926193a-ea80-4e69-8306-a421f1252cf3)
+
 
 **Credits**
 - Andrew: For inspiring me to create this project lol 
