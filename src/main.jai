@@ -74,7 +74,7 @@ main :: ()
                 }
                 else
                 {
-                    update_timings(opened_osu_file, *mania_catch_converter);
+                    //update_timings(opened_osu_file, *mania_catch_converter);
                     app_state = .Main;
                 }
             }

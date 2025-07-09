@@ -252,33 +252,9 @@ mania_to_catch :: (using osu_file: *Osu_File, using app: Mania_Catch_Converter)
             break;
         }
 
-        current_timing: Timing_Info;
-        for timings
-        {
-            next_timing: Timing_Info;
-            if it_index + 1 < timings.count
-            {
-                next_timing = timings[it_index+1];
-
-                if current_object.time >= it.time && current_object.time < next_timing.time
-                {
-                    current_timing = it;
-                }
-                else
-                {
-                    continue;
-                }
-            }
-            else
-            {
-                current_timing = it;
-            }
-        }
-
         this_direction := ifx next_object.x > current_object.x then 1 else -1;
         time_to_next := next_object.time - current_object.time;
-        snapping := get_closest_snapping(xx time_to_next, current_timing);
-        trigger_distance := current_timing.one_measure_ms[snapping] - (1000.0 / 60.0 / 4) + half_catcher_width;
+        trigger_distance := time_to_next - (1000.0 / 60.0 / 4) + half_catcher_width;
 
         distance_to_next := cast(float)abs(next_object.x - current_object.x);
 
@@ -289,7 +265,15 @@ mania_to_catch :: (using osu_file: *Osu_File, using app: Mania_Catch_Converter)
             {
                 adjusted_distance := this_direction * (trigger_distance + adjusted_distance_offset);
                 next_object.x = current_object.x + xx adjusted_distance;
-                Clamp(*next_object.x, 16, 496);
+
+                Clamp(*next_object.x, 0, 512);
+
+                if abs(next_object.x - current_object.x) < xx trigger_distance
+                {
+                    next_object.x = xx (current_object.x + this_direction * (trigger_distance*0.2));
+                    Clamp(*next_object.x, 0, 512);
+                }
+                
                 last_is_hyper = true;
             }
             else
@@ -315,7 +299,7 @@ mania_to_catch :: (using osu_file: *Osu_File, using app: Mania_Catch_Converter)
                 next_object.x = ifx no_antiflow 
                                 then current_object.x + cast(int)(last_direction * adjusted_distance)
                                 else current_object.x + cast(int)(this_direction * adjusted_distance);
-                Clamp(*next_object.x, 16, 496);
+                Clamp(*next_object.x, 0, 512);
                 last_is_hyper = false;
             }
         }
