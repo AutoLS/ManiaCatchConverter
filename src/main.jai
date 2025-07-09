@@ -100,18 +100,23 @@ main :: ()
                         ImGui.SliderFloat("CS", *difficulty_info.CircleSize, 1, 10, "%.1f");
                         ImGui.SliderFloat("AR", *difficulty_info.ApproachRate, 1, 10, "%.1f");
                         ImGui.SliderFloat("OD", *difficulty_info.OverallDifficulty, 1, 10, "%.1f");
-                        if ImGui.InputFloat("Trigger Distance Coefficient", *trigger_distance_coefficient, 0.1, 0.1, "%.1f")
+                        ImGui.Checkbox("No pixel jumps", *no_pixel_jumps);
+                        tool_tip("Remove pixels when enabled, it is recommended to have it enabled for maps to be playable");
+                        if no_pixel_jumps
                         {
-                            Clamp(*trigger_distance_coefficient, 0.1, 0.9);
+                            if ImGui.InputFloat("Trigger distance coefficient", *trigger_distance_coefficient, 0.1, 0.1, "%.1f")
+                            {
+                                Clamp(*trigger_distance_coefficient, 0.1, 0.9);
+                            }
+                            tool_tip("The trigger distance coefficient determines how much distance to next is required to make it a hyper. For example if it's at 0.5, it will make a hyper jump if the distance to next is greater than half of trigger distance.");
+                            if ImGui.InputFloat("Hyper offset", *adjusted_distance_offset, 0.1, 0.1, "%.1f")
+                            {
+                                Clamp(*adjusted_distance_offset, 0, 100);
+                            }
+                            tool_tip("Offset of converted hyper jumps. Higher number = higher spacing");
                         }
-                        tool_tip("The trigger distance coefficient determines how much distance to next is required to make it a hyper. For example if it's at 0.5, it will make a hyper jump if the distance to next is greater than half of trigger distance.");
-                        if ImGui.InputFloat("Hyper offset", *adjusted_distance_offset, 0.1, 0.1, "%.1f")
-                        {
-                            Clamp(*adjusted_distance_offset, 0, 100);
-                        }
-                        tool_tip("Offset of converted hyper jumps. Higher number = higher spacing");
                         ImGui.Checkbox("No bullshit hypers", *no_bullshit_hypers);
-                        tool_tip("Remove hypers based on user's parameters");
+                        tool_tip("Remove hypers based on user's settings");
                         if no_bullshit_hypers
                         {
                             ImGui.Checkbox("Allow hyper if same direction", *allow_bullshit_hyper_if_same_direction);

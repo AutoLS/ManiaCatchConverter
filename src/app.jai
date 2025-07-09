@@ -45,6 +45,7 @@ Mania_Catch_Converter :: struct
     output_filename_buffer: *u8;
     output_difficulty_name_buffer: *u8;
 
+    no_pixel_jumps: bool = true;
     trigger_distance_coefficient: float = 0.5;
     adjusted_distance_offset: float = 20;
 
@@ -261,7 +262,7 @@ mania_to_catch :: (using osu_file: *Osu_File, using app: Mania_Catch_Converter)
         if distance_to_next < xx trigger_distance
         {
             //!Naive attempt to fix pixel jumps
-            if distance_to_next > trigger_distance * trigger_distance_coefficient
+            if distance_to_next > trigger_distance * trigger_distance_coefficient && no_pixel_jumps
             {
                 adjusted_distance := this_direction * (trigger_distance + adjusted_distance_offset);
                 next_object.x = current_object.x + xx adjusted_distance;
