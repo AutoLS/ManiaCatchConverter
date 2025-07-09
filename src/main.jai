@@ -138,7 +138,9 @@ main :: ()
                         ImGui.Separator();
                         ImGui.Text("File Settings");
                         ImGui.InputText("Difficulty Name", output_difficulty_name_buffer, DEFAULT_PATH_SIZE);
+                        tool_tip("Defaults to \"CTB\" if left empty");
                         ImGui.InputText("Output File Name", output_filename_buffer, DEFAULT_PATH_SIZE);
+                        tool_tip("Defaults to \"Artist - Title (Mapper) [Difficulty Name]\"  if left empty");
                         ImGui.PopItemWidth();
                         if ImGui.Button("Convert")
                         {
@@ -150,6 +152,8 @@ main :: ()
                             {
                                 file_name = tprint("% - % (%) [%]", metadata.Artist, metadata.Title, metadata.Creator, difficulty_name);
                             }
+
+                            replace_chars(file_name, "\\/:\"*?<>|", " ");
 
                             //print("%\n", difficulty_name);
                             //print("%\n", file_name);
